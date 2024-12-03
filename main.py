@@ -6,6 +6,7 @@ from math import cos, pi, sin
 
 from PyQt6 import uic  # Импортируем uic
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor
 from PyQt6.QtGui import QPainter, QPen
 from PyQt6.QtWidgets import QApplication, QMainWindow
 
@@ -13,11 +14,47 @@ SCREEN_SIZE = [500, 500]
 # Задаём длину стороны и количество углов
 SIDES_COUNT = 100
 
+template = """<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="pushButton_paint">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>450</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Нарисовать</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
+"""
 
 class DrawStar(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi("UI.ui", self)
+        f = io.StringIO(template)
+        uic.loadUi(f, self)
         self.setGeometry(300, 300, *SCREEN_SIZE)
         self.setWindowTitle('Рисуем звезду')
         self.do_paint = False
@@ -53,6 +90,8 @@ class DrawStar(QMainWindow):
         nodes2 = [(int(self.xs(node[0])),
                    int(self.ys(node[1]))) for node in nodes]
 
+        pen = QPen(QColor(255, randint(0, 255), randint(0, 255)), 2)
+        qp.setPen(pen)
         # Рисуем пятиугольник
         for i in range(-1, len(nodes2) - 1):
             qp.drawLine(*nodes2[i], *nodes2[i + 1])
